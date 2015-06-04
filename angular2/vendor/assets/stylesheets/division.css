@@ -1,0 +1,133 @@
+.panel {
+position: fixed; /*fixed with respect to window */
+bottom: 0px;
+right: 20px;
+border: 1px solid #bbb;
+z-index: 0;/* The z-index property specifies the stack order of an element.
+An element with greater stack order is always in front of an element with a lower stack order.
+Note: z-index only works on positioned elements (position:absolute, position:relative, or position:fixed).*/
+background: #E8E8E8;
+width: 300px; 
+border-radius: 10px 10px 0 0;
+margin-bottom: 0px;
+}
+#top_display{
+	filter: blur(20px) grayscale(20%);
+	bottom:0px;
+	background: #D0D0D0;
+	border-radius: 10px 10px 0 0;
+/*line-height: 16px;
+background-image: -moz-linear-gradient(center top,#fff,#ccc);
+background-image: linear-gradient(top,#fff,#ccc);
+background-image: -webkit-linear-gradient(top,#fff,#ccc);
+background-image: -ms-linear-gradient(top,#fff,#ccc);
+background-image: -webkit-gradient(linear,left top,left bottom,from(#fff),to(#ccc));
+filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#fff',EndColorStr='#ccc');*/
+padding:10px;
+cursor: pointer;
+font-size: 14px;
+/*border-radius: 5px 5px 0 0;*/
+}
+body {
+font-size: 13px;
+font-family: "Big Caslon";
+line-height: 18px;
+color: black;
+border-collapse: collapse;
+}
+div{
+	display:block;
+}
+*{
+	margin: 0;
+padding: 0;
+}
+
+#second{
+	height:0px;
+	border : 1px solid;
+	border-color: #F8F8F8;
+	font-size: 15px;
+	background-color: #C0C0C0;
+font-family: "Copperplate";
+line-height: 18px;
+font-color: black;
+
+	data-role="scrollbox";
+	data-scroll="vertical";
+}
+
+
+
+
+.bar{
+	float:up;
+	background-color: white;
+	border : 1px solid;
+	border-color: #A8A8A8;
+	height : 60px;
+	border-radius: 10px 0px 10px 0px;
+	
+	margin:2px;
+
+}
+
+.bar_text{
+	display: block;
+	width : 200px;
+	height:20px;
+	overflow:hidden;
+	position :relative;
+	left:50px;
+	bottom:50px;
+	font-size: 16px;
+    color:#686868 ;
+    text-decoration: none;
+}
+
+.bar_text:hover 
+{
+     color:black; 
+     text-decoration:none; 
+     cursor:pointer;  
+}
+
+
+
+
+
+
+.price_text{
+	position :relative;
+	top : 100px;
+	font-size : 13px;
+	color : red;
+	top:20px;
+	
+}
+
+
+
+
+
+
+
+
+.bar_image{
+	padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+	height :60px;
+	width : 60px;
+}
+
+.btn btn-mini{
+	float:right;
+	/*padding-top:20px;*/
+	
+	height: 30px;
+	width :30px;
+	background-color:#E0E0E0;
+
+
+}

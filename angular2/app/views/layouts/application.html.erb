@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!-- Quick List v1.0 dated 16th July, 2014
+		by : Sanchay Dewan, Shubham Gupta, Vivek Kishore Choudhary, Astha Gupta -->
+<html ng-app="Blog">
+<head>
+  <title>Angular2</title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application', controller_name %>
+  <%= csrf_meta_tags %>
+</head>
+<body onload="quicklist();">		<!-- quicklist function being called -->
+
+
+<script type="text/javascript">	
+    var max = 250;
+    var noItems = 0;
+    var xname;
+    var noStd=4;
+	var userid;
+	/*	the add function adds a new product to the  */
+    function add(x) {
+        var listing_id=x.id;
+		var price;
+		var image_src;
+		var listing_url;
+		var product_title;
+		
+		$(x).attr('disabled', 'disabled');
+		
+		$.ajax({
+			url: 'http://t.infibeam.com/mutd',
+			method: 'GET',
+			dataType:'jsonp'
+		}).done(function(data)
+		{
+			//console.log(data);
+			userid=data;
+			
+			$.ajax({
+				url: '/product/details',
+				method: 'GET',
+				data:({listing_id:listing_id}),
+				dataType:'json'
+			}).done(function(data){
+				price = data[0].listing_price;
+				image_src = "http://catman-a2.infibeam.com/img" + data[0].default_image.substr(13)+".999x60x60.jpg";
+				//console.log(image_src);
+				listing_url = data[0].url;
+				product_title = data[0].product_title;
+				
+				$.ajax({
+					url: '/check/exist',
+					method: 'GET',
+					data:({userid:userid}),
+					dataType:'json'
+				}).done(function(data){
+					
+					if (jQuery.isEmptyObject(data))
+					{
+						$.ajax({
+							url: '/head/bang',
+							method: 'GET',
+							data:({userid:userid, products:listing_id})
+						}).done(function(data){
+						});
+	
+						noItems++;
+						$('#count').html(noItems);
+												
+						document.getElementById("widget").innerHTML += "<p style='font-color: black;padding=0px;' id='"+x.id+"bar' class='bar'><img class='bar_image' src='"+image_src+"'  left='10px';><span class='price_text'>Rs. " + price + "</span><a class='bar_text' href='http://www.infibeam.com" + listing_url + "' target=_blank>" + product_title +"</a><button id='"+x.id+"re_button' class='btn btn-mini' style='position:relative;left:260px;bottom:78px' onclick=removeLine('"+x.id+"bar')><i class='icon-trash'></i></button></p>";
+								
+						if ($('#second').height() < max)
+						{
+							$('#second').height(noItems * 63.5);
+						}
+						else
+							$('#second').css("overflow","auto");
+	
+					}
+					else 
+					{
+						//console.log("not empty");
+						var products = data[0].products;
+						var prod_split = products.split("_");
+						var count = prod_split.length;
+						//console.log(count);
+						//checking if the count is less than 5 then ask user to login else continue
+						if(count>=4	){		
+							$('#'+x.id).attr('disabled', false);
+							alert("Maximum no. of items are 4. Login to add more.");
+						}
+						else 
+						{
+							products = products.concat("_"+listing_id);
+							noItems++;
+							$('#count').html(noItems);
+													
+							document.getElementById("widget").innerHTML += "<p style='font-color: black;padding=0px;' id='"+x.id+"bar' class='bar' ><img class='bar_image' src='"+image_src+"'  left='10px';><span class='price_text'>Rs. " + price + "</span><a class='bar_text' href='http://www.infibeam.com" + listing_url + "' target=_blank>" + product_title +"</a><button id='"+x.id+"re_button' class='btn btn-mini' style='position:relative;left:260px;bottom:78px' onclick=removeLine('"+x.id+"bar')><i class='icon-trash'></i></button></p>";
+
+							if ($('#second').height() < max)
+							{
+								$('#second').height(noItems * 63.5);
+							}
+							else
+								$('#second').css("overflow","auto");
+	
+						}
+
+						$.ajax({
+							url: '/update/list',
+							method: 'GET',
+							data:({userid:userid, products:products})
+						}).done(function(data){
+						});
+					}
+				});
+			});
+		});
+	}
+
+	var hide_var=0;
+
+	// toggle for button on quick list 
+    
+    function toggle_visibility(id) {
+        $('#' + id).slideToggle();
+        
+        if(hide_var==0){
+            $("#hide_icon").removeClass("icon-chevron-down").addClass("icon-chevron-up");
+            hide_var=1;
+            return;
+        }
+        if(hide_var==1)
+        {
+            hide_var=0;
+            $("#hide_icon").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+	    }
+    }
+	
+	function removeLine(x) {
+		// function to remove element from the list 
+		xname = x.substring(0,x.length-3);
+		$('#' + x).remove();
+		noItems--;
+        //console.log(xname);
+        $('#'+xname).attr('disabled', false);
+        if (noItems<noStd)
+        $('#second').height(noItems * 63.5);
+        
+        $('#count').html(noItems);
+		$.ajax({
+			url: '/check/exist',
+			method: 'GET',
+			data:({userid:userid}),
+			dataType:'json'
+		}).done(function(data){
+			var prodlist = data[0].products;
+			//console.log(prodlist);
+			var prod_split = prodlist.split("_");
+			var count = prod_split.length;
+			//console.log(count);
+			var products = "";
+			if(count==1)  //if there is only one product in list 
+			{
+				$.ajax({
+					url: '/del/user',
+					method: 'GET',
+					data:({userid:userid})
+				}).done(function(data){
+				});
+			}
+			else   // if there are multiple product in list
+			{
+				var pos = prodlist.search(xname);
+				if(pos==0)	prodlist = prodlist.slice(xname.length+1,prodlist.length);
+				else if(pos==(prodlist.length-xname.length)) prodlist = prodlist.slice(0,prodlist.length-(xname.length+1));
+				else {
+					prodlist = prodlist.slice(0,pos-1).concat(prodlist.slice((pos+xname.length),prodlist.length));
+				}
+				//console.log(prodlist);
+				products = prodlist;
+				$.ajax({
+					url: '/edit/user',
+					method: 'GET',
+					data:({userid:userid,products:products})
+				}).done(function(data){
+				});
+			}
+		});
+    }
+
+	function quicklist(){
+		$.ajax({
+			url: 'http://t.infibeam.com/mutd',
+			method: 'GET',
+			dataType:'jsonp'
+		}).done(function(data)
+		{
+			userid=data;
+			$.ajax({
+				url: '/check/exist',
+				method: 'GET',
+				data:({userid:userid})
+			}).done(function(data){
+				if (!(jQuery.isEmptyObject(data)))
+				{
+					var products = data[0].products;
+					var prod_split = products.split("_");
+					var count = prod_split.length;
+					var i;
+					var product_title;
+
+					for(i=0;i<count;i++){
+						var listing_id=prod_split[i]; // array in which name of the product is stored after splitting
+						$('#'+listing_id).attr('disabled', 'disabled'); // to disable the button for that product
+						//console.log(listing_id);
+						$.ajax({
+							url: '/product/details',
+							method: 'GET',
+							data:({listing_id:listing_id}),
+							async: false,
+							dataType:'json'
+						}).done(function(data){
+							price = data[0].listing_price;
+							image_src = "http://catman-a2.infibeam.com/img" + data[0].default_image.substr(13)+".999x60x60.jpg";
+							//console.log(image_src);
+							listing_url = data[0].url;
+							product_title = data[0].product_title;
+							//console.log("inside"+listing_id);
+							noItems++;
+							$('#count').html(noItems);
+													
+							document.getElementById("widget").innerHTML += "<p style='font-color: black;padding=0px;' id='"+listing_id+"bar' class='bar' ><img class='bar_image' src='"+image_src+"'  left='10px';><span class='price_text'>Rs. " + price + "</span><a class='bar_text' href='http://www.infibeam.com" + listing_url + "' target=_blank>" + product_title +"</a><button id='"+listing_id+"re_button' class='btn btn-mini' style='position:relative;left:260px;bottom:78px' onclick=removeLine('"+listing_id+"bar')><i class='icon-trash'></i></button></p>";
+
+							
+
+							if ($('#second').height() < max)
+							{
+								$('#second').height(noItems * 63.5);
+							}
+							else
+							$('#second').css("overflow","auto");
+						});
+					}					
+				}
+			});
+					
+		});
+	}
+</script>
+
+
+	<!-- div for the quick list -->
+	<div class="view-container" style="position:absolute;">
+    	<div class="panel" id="sidebar">	<!--top display , visible throughout -->
+    		<div id="top_display" class="third"  title="Hide"><b>YOUR SAVED ITEMS</b> (<a id="count" style="text-color:black">0</a>)
+        		<button  style="float:right;width:50px ;padding:0;border: none;background: none;" id="hide_button" onclick="toggle_visibility('second')"><i id ="hide_icon" class="icon-chevron-down"></i></button>
+
+    		</div>
+
+	  		<div  id="second" > <!-- new divs get added here for listing saved items -->
+	        	<p id="widget"></p>
+		        <div sf-scroller="y = 0 to eventLog.length" ng-model="slicePosition"></div>
+	    	</div>
+		</div>
+	</div>
+
+
+
+<%= yield %>
+
+</body>
+</html>

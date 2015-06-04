@@ -1,0 +1,35 @@
+.resultContainer {width:500px;min-height:80px;border-bottom:1px solid #dedede;position:relative;background-color:#dedede;}
+.viewThisResult {position:absolute;bottom:8px;left:380px;}
+
+
+/*button css*/
+.mini-listing.button, .mini-listing.button100 {
+    font-size: 14px;
+    margin-top: -5px;
+    padding: 5px 7px;
+}
+a.button {
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "proxima-nova-1","proxima-nova-2",Helvetica,Arial,sans-serif;
+    font-weight: bold;
+    line-height: 1;
+    padding: 9px 34px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.gray {
+    background: none repeat scroll 0 0 #AAAAAA;
+}
+
+
+.col-md-5 .viewThisResult {
+    display: none;
+}
+.col-md-5:hover .viewThisResult {
+    display: inline;
+}
