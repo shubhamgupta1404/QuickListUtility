@@ -1,4 +1,5 @@
 # QuickListUtility v1.0
+Designed by SHUBHAM GUPTA for INFIBEAM.COM as a summer intern project during May 2014 - July 2014
 
 ##GENERAL USAGE NOTES
 * Windows PC with rails environment installed
@@ -7,8 +8,8 @@
 * It has been made for desktop/tablets and is responsive for the same.It is to be noted that it is not recommended to be added to the mobile site because of low screen width.
 
 ##Files Includes With This Project
-*listing.sql
-*angular2
+1. listing.sql
+2. angular2
 
 ##How To Run
 1. In mysql write the following commands :
